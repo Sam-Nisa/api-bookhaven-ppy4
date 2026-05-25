@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('payment_qr_md5')->nullable()->after('payment_qr_code');
+            if (!Schema::hasColumn('orders', 'payment_qr_md5')) {
+                $table->string('payment_qr_md5')->nullable();
+            }
         });
     }
 
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('payment_qr_md5');
+            if (Schema::hasColumn('orders', 'payment_qr_md5')) {
+                $table->dropColumn('payment_qr_md5');
+            }
         });
     }
 };
